@@ -18,4 +18,28 @@ initJQuery();
 
 function initAntiSeo() {
 	jQuery.noConflict();	
+	//clean all paragraphs and divs which don't contain paragraphs
+	jQuery('p, div:not(:has(p))').each(function(){
+		antiSeoCleanNode(jQuery(this));
+	});	
+}
+
+function antiSeoCleanNode(nodetoclean) {	
+	var mynodes	=	nodetoclean.children('p, div:not(:has(p))');	
+	if(mynodes.length > 0) {		
+		mynodes.each(function(){
+			antiSeoCleanNode(jQuery(this));
+		});		
+	}
+	antiSeoCleanup(nodetoclean);
+}
+
+function antiSeoCleanup(element) {
+	wordcount = element.text().split(' ').length;
+	//25 is what i might consider spammy, so crop from there	
+	if(wordcount > 25) {			
+		element.text('');
+		return true;
+	}
+	return false;
 }
